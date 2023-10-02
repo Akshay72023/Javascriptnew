@@ -8,7 +8,6 @@ function createPost() {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             posts.push({ id: 4, content: 'Post 4' });
-
             resolve();
         }, 1000);
     });
@@ -30,7 +29,7 @@ function deletePost() {
 function updateLastUserActivityTime() {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            const lastActivityTime = new Date();
+            const lastActivityTime = new Date().getTime();
             resolve(lastActivityTime);
         }, 1000);
     });
@@ -38,18 +37,17 @@ function updateLastUserActivityTime() {
 
 
 Promise.all([
-    updateLastUserActivityTime(),
-    createPost()
+    createPost(),
+    updateLastUserActivityTime()
 ])
-.then(([lastActivityTime]) => {
+.then(([,lastActivityTime]) => {
     console.log('User\'s last activity time updated:', lastActivityTime);
     console.log('Post created successfully!',posts);
     return Promise.all([
-        lastActivityTime,
-        deletePost()
-    ]);
-})  
-.then(([lastActivityTime]) => {
+        deletePost(),
+        updateLastUserActivityTime()])
+}) 
+.then(([,lastActivityTime]) => {
     console.log('Post deleted successfully!');
     console.log('User\'s last activity time updated again:', lastActivityTime);
     console.log('Remaining Posts:', posts);
